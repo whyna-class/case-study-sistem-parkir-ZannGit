@@ -2,6 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateParkirDto } from './dto/create-parkir.dto';
 import { UpdateParkirDto } from './dto/update-parkir.dto';
+import { FindParkirDto } from './dto/find-parkir.dto';
+import { jenisKendaraan } from '@prisma/client';
 
 @Injectable()
 export class ParkirService {
@@ -38,9 +40,46 @@ export class ParkirService {
     return created;
   }
 
-  findAll() {
-    return this.prisma.parkir.findMany({ orderBy: { createdAt: 'desc' }});
-  }
+ async findAll(query: FindParkirDto) {
+  const {
+    page = 1,
+    limit = 10,
+    search,
+    jenisKendaraan,
+    durasi,
+  } = query;
+
+  const skip = (page - 1) * limit;
+
+  const [data, total] = await Promise.all([
+    this.prisma.parkir.findMany({
+      where: {OR: [
+        {platNomor: { contains: search || ''} },
+        {jenisKendaraan: { equals: jenisKendaraan || undefined } },
+        {durasi: { equals: durasi || undefined } },
+      ]},
+      skip,
+      take: limit,
+      orderBy: { createdAt: 'desc' },
+    }),
+    this.prisma.parkir.aggregate({ where: {OR: [
+        {platNomor: { contains: search || ''} },
+        {jenisKendaraan: { equals: jenisKendaraan || undefined } },
+        {durasi: { equals: durasi || undefined } },
+      ]}, _sum: {total: true} }).then(res => res._sum.total ?? Number(0)),
+  ]);
+
+  console.log(data);
+
+  return {
+    page,
+    limit,
+    total,
+    totalPages: Math.ceil(total / limit),
+    data,
+  };
+}
+
 
   async findOne(id: number) {
     const p = await this.prisma.parkir.findUnique({ where: { id }});

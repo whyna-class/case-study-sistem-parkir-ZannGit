@@ -1,0 +1,106 @@
+{
+  "info": {
+    "_postman_id": "parkir-collection-001",
+    "name": "NestJS Parkir API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Create Parkir",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"platNomor\": \"N 1234 AB\",\n  \"jenisKendaraan\": \"motor\",\n  \"waktuMasuk\": \"2025-11-20T08:00:00.000Z\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/parkir",
+          "host": ["{{base_url}}"],
+          "path": ["parkir"]
+        }
+      },
+      "response": []
+    },
+
+    {
+      "name": "Get All Parkir (Search, Filter, Pagination)",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/parkir?page=1&limit=10&search=&jenisKendaraan=&sortBy=createdAt&sortOrder=desc",
+          "host": ["{{base_url}}"],
+          "path": ["parkir"],
+          "query": [
+            { "key": "page", "value": "1" },
+            { "key": "limit", "value": "10" },
+            { "key": "search", "value": "" },
+            { "key": "jenisKendaraan", "value": "" },
+            { "key": "sortBy", "value": "createdAt" },
+            { "key": "sortOrder", "value": "desc" }
+          ]
+        }
+      },
+      "response": []
+    },
+
+    {
+      "name": "Get Parkir by ID",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/parkir/{{parkir_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["parkir", "{{parkir_id}}"]
+        }
+      },
+      "response": []
+    },
+
+    {
+      "name": "Update Parkir",
+      "request": {
+        "method": "PATCH",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"waktuKeluar\": \"2025-11-20T10:30:00.000Z\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/parkir/{{parkir_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["parkir", "{{parkir_id}}"]
+        }
+      },
+      "response": []
+    },
+
+    {
+      "name": "Delete Parkir",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "{{base_url}}/parkir/{{parkir_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["parkir", "{{parkir_id}}"]
+        }
+      },
+      "response": []
+    },
+
+    {
+      "name": "Get Total Pendapatan",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/parkir/total",
+          "host": ["{{base_url}}"],
+          "path": ["parkir", "total"]
+        }
+      },
+      "response": []
+    }
+  ]
+}
